@@ -6,7 +6,7 @@ from discord.ext import commands
 
 from redbot.core import Config
 #from .utils.dataIO import dataIO
-from redbot.core.utils import checks
+from redbot.core import checks
 from redbot.core.utils.chat_formatting import box, error, info, pagify, warning
 
 
