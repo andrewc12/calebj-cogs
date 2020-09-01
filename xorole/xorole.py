@@ -4,9 +4,10 @@ from collections import defaultdict
 import discord
 from discord.ext import commands
 
-from .utils.dataIO import dataIO
-from .utils import checks
-from .utils.chat_formatting import box, error, info, pagify, warning
+from redbot.core import Config
+#from .utils.dataIO import dataIO
+from redbot.core.utils import checks
+from redbot.core.utils.chat_formatting import box, error, info, pagify, warning
 
 
 """XORoles (exclusive-or roles) cog by GrumpiestVulcan
@@ -45,8 +46,10 @@ class PermissionsError(XORoleException):
 
 class XORole:
     def __init__(self, bot):
+        self.config = Config.get_conf(self, identifier=178815810518458960294504)
         self.bot = bot
-        self.settings = dataIO.load_json(JSON)
+        #self.settings = dataIO.load_json(JSON)
+        self.settings = {}
 
         if self.upgrade_data():
             self.save()
@@ -57,8 +60,11 @@ class XORole:
             self.bot.logger.exception(e)
             self.analytics = None
 
-    def save(self):
-        dataIO.save_json(JSON, self.settings)
+    async def load(self):
+        self.settings = await self.config.custom("V2", "V2").all()
+
+    async def save(self):
+        await self.config.custom("V2", "V2").set(self.settings)
 
     def upgrade_data(self) -> bool:
         if self.settings.get("SCHEMA_VER", 1) >= 2:
@@ -752,9 +758,8 @@ class XORole:
             self.analytics.command(ctx)
 
 
-def setup(bot):
-    if not dataIO.is_valid_json(JSON):
-        print("Creating %s..." % JSON)
-        dataIO.save_json(JSON, {})
 
-    bot.add_cog(XORole(bot))
+async def setup(bot):
+    cog = XORole(bot)
+    await cog.load()
+    bot.add_cog(cog)
