@@ -2,11 +2,10 @@ import asyncio
 from collections import defaultdict
 
 import discord
-from discord.ext import commands
+#from discord.ext import commands
 
-from redbot.core import Config
+from redbot.core import Config, checks, commands
 #from .utils.dataIO import dataIO
-from redbot.core import checks
 from redbot.core.utils.chat_formatting import box, error, info, pagify, warning
 
 
@@ -44,7 +43,7 @@ class PermissionsError(XORoleException):
     pass
 
 
-class XORole:
+class XORole(commands.Cog):
     def __init__(self, bot):
         self.config = Config.get_conf(self, identifier=178815810518458960294504)
         self.bot = bot
